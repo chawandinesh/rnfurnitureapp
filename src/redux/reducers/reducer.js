@@ -26,9 +26,9 @@ const reducer = (state = initialState, action) => {
         ),
       };
     case UPDATE_FURN:
-      state[action.tempKey][idx] = action.data;
+      state[action.tempKey][action.index] = action.data;
       return {
-        state,
+        ...state
       };
 
     default:

@@ -39,7 +39,6 @@ class Categories extends React.Component {
   };
 
   render() {
-    console.log(this.props);
     return (
       <Container style={{backgroundColor: '#ffead9'}} noheader>
         <Grid>

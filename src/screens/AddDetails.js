@@ -30,7 +30,7 @@ import {Col, Row, Grid} from 'react-native-easy-grid';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
-import {atnAddFurn} from '../redux/actions/furnActions';
+import {atnAddFurn, atnUpdateFurn} from '../redux/actions/furnActions';
 import ImagePicker from 'react-native-image-crop-picker';
 
 class AddDetails extends React.Component {
@@ -39,6 +39,7 @@ class AddDetails extends React.Component {
     this.height = Dimensions.get('window').height;
     this.width = Dimensions.get('window').width;
     this.state = {
+      isEditable: false,
       title: '',
       count: '',
       price: '',
@@ -46,6 +47,25 @@ class AddDetails extends React.Component {
       imageUrl: '',
     };
   }
+
+
+  componentDidMount(){
+    const {tempKey,index} = this.props.route.params
+
+    if(index !== undefined){
+      const {title,count,price,note,imageUrl} = this.props.state[tempKey][index]
+       this.setState({
+         isEditable: true,
+         title,
+         count,
+         price,
+         note,
+         imageUrl
+       })
+    }
+  }
+
+  
 
   pickImage = () => {
     ImagePicker.openPicker({
@@ -65,12 +85,19 @@ class AddDetails extends React.Component {
 
   handleOk = () => {
     let tempKey = this.props.route.params.tempKey;
-    this.props.atnAddFurn(this.state, tempKey);
+    if(this.state.isEditable ){
+      let index = this.props.route.params.index
+     this.props.atnUpdateFurn(this.state,tempKey,index)
+    }else{
+      this.props.atnAddFurn(this.state, tempKey);
+    }
+      
     this.setState({title: '', count: '', price: '', note: '', imageUrl: ''});
     this.props.navigation.goBack();
   };
 
   render() {
+    const {isEditable} = this.state
     return (
       <Container style={{backgroundColor: '#ffead9'}} noheader>
         <Grid>
@@ -104,7 +131,7 @@ class AddDetails extends React.Component {
                     height: 40,
                     borderColor: 'gray',
                   }}
-                  placeholder="Sofas fabric and leather"
+                  placeholder="Enter Name of Furniture"
                   onChangeText={(text) => this.setState({title: text})}
                   value={this.state.title}
                 />
@@ -122,7 +149,7 @@ class AddDetails extends React.Component {
                     height: 40,
                     borderColor: 'gray',
                   }}
-                  placeholder="4"
+                  placeholder="Number of Item"
                   onChangeText={(text) => this.setState({count: text})}
                   value={this.state.count}
                 />
@@ -140,7 +167,7 @@ class AddDetails extends React.Component {
                     height: 40,
                     borderColor: 'gray',
                   }}
-                  placeholder="1200"
+                  placeholder="Price"
                   onChangeText={(text) => this.setState({price: text})}
                   value={this.state.price}
                 />
@@ -160,7 +187,7 @@ class AddDetails extends React.Component {
                   }}>
                   <Textarea
                     rowSpan={4}
-                    placeholder="Textarea"
+                    placeholder="Enter here..."
                     onChangeText={(text) => this.setState({note: text})}
                     value={this.state.note}
                   />
@@ -194,7 +221,9 @@ class AddDetails extends React.Component {
                         borderWidth: 1,
                       }}>
                       {this.state.imageUrl.length ? (
+                        <TouchableOpacity onPress={this.pickImage} >
                         <Image
+                        //   onPress={this.pickImage}
                           source={{uri: this.state.imageUrl}}
                           style={{
                             height: this.height * 0.1,
@@ -202,6 +231,7 @@ class AddDetails extends React.Component {
                           }}
                           resizeMode="stretch"
                         />
+                        </TouchableOpacity>
                       ) : null}
                     </View>
                   )}
@@ -244,7 +274,7 @@ class AddDetails extends React.Component {
                     color: '#d99841',
                     fontSize: 25,
                   }}>
-                  Save
+                 {isEditable? <Text>Update</Text> : <Text>Save</Text>} 
                 </Text>
               </Button>
             </Content>
@@ -264,6 +294,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     atnAddFurn: (e, tempKey) => dispatch(atnAddFurn(e, tempKey)),
+    atnUpdateFurn: (data,tempKey,index) => dispatch(atnUpdateFurn(data,tempKey,index))
   };
 };
 

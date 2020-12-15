@@ -5,37 +5,16 @@ import {
   ImageBackground,
   StyleSheet,
   TouchableHighlight,
-  FlatList,
-  Image,
-  TouchableOpacity,
 } from 'react-native';
-import {
-  Container,
-  Header,
-  Content,
-  Button,
-  Text,
-  Card,
-  CardItem,
-  List,
-  ListItem,
-  Thumbnail,
-  Icon,
-  Left,
-  Body,
-  Right,
-} from 'native-base';
-import {Col, Row, Grid} from 'react-native-easy-grid';
-import {
-  ListCategory,
-  CardCategory,
-  ShowCardCategory,
-} from '../components/ListCategory';
+import { Container, Content, Button, Text } from 'native-base';
+import { Row, Grid } from 'react-native-easy-grid';
+import { ShowCardCategory } from '../components/ListCategory';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {connect} from 'react-redux';
-import Swipeable from 'react-native-swipeable';
-import {atnRemoveFurn} from '../redux/actions/furnActions';
-import {ScrollView} from 'react-native-gesture-handler';
+import { connect } from 'react-redux';
+import { atnRemoveFurn } from '../redux/actions/furnActions';
+import { SwipeListView } from 'react-native-swipe-list-view';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { cleanSingle } from 'react-native-image-crop-picker';
 
 class CategoriesDetails extends React.Component {
   constructor(props) {
@@ -46,6 +25,7 @@ class CategoriesDetails extends React.Component {
       categoryDetails: {},
       change: false,
       rightButtonWidth: 100,
+      dataArray:[]
     };
   }
 
@@ -53,18 +33,19 @@ class CategoriesDetails extends React.Component {
     return [
       <TouchableHighlight
         onPress={() => {
-          this.setState({change: !this.state.change});
+          this.setState({ change: !this.state.change });
           this.props.atnRemoveFurn(this.props.route.params.tempKey, index);
-          this.setState({rightButtonWidth: 0});
+          this.setState({ rightButtonWidth: 0 });
         }}
         style={{
           backgroundColor: 'red',
+          justifyContent: 'flex-end',
           justifyContent: 'center',
-          flex: 1,
         }}>
         <Text
           style={{
             fontSize: 20,
+            textAlign: 'right',
             color: '#fff',
             marginLeft: 20,
             fontWeight: 'bold',
@@ -75,41 +56,63 @@ class CategoriesDetails extends React.Component {
     ];
   };
 
-  swipeoutBtns = [
-    {
-      text: 'Button',
-    },
-  ];
-
-  renderItem = ({item, index}) => {
+  renderItem = (data, rowMap) => {
+    let { item } = data;
     return (
-      <Swipeable
-        useNativeDriver={false}
-        rightActionActivationDistance={this.width * 0.9}
-        rightButtonWidth={this.width * 0.25}
-        onRightActionRelease={() =>
-          this.props.atnRemoveFurn(this.props.route.params.tempKey, index)
-        }
-        rightButtons={this.rightButtons(index)}>
-        <ShowCardCategory
-          name={item.title}
-          imageProp={{uri: item.imageUrl}}
-          data={{
-            count: item.count,
-            price: item.price,
-            note: item.note,
-          }}
-        />
-      </Swipeable>
+
+      <ShowCardCategory
+        name={item.title}
+        navigation={this.props.navigation}
+        index = {data.index}
+        tempKey={this.props.route.params.tempKey}
+        imageProp={{ uri: item.imageUrl }}
+        data={{
+          count: item.count,
+          price: item.price,
+          note: item.note,
+        }}
+      />
+    );
+  };
+
+  
+
+
+  componentDidUpdate(prevProps,prevState){
+    if(prevProps !== this.props){
+      const { tempKey } = this.props.route.params;
+      this.setState({
+        dataArray: this.props.state[tempKey]
+      })
+    }
+  }
+
+  renderHiddenItem = (data, rowMap) => {
+    return (
+      <TouchableHighlight
+        onPress={async () => {
+          await this.props.atnRemoveFurn(
+            this.props.route.params.tempKey,
+            data.index,
+          );
+          rowMap[data.index] && rowMap[data.index].closeRow();
+        }}
+        style={{
+          backgroundColor: 'red',
+          justifyContent: 'center',
+          margin: 5,
+          flex: 1,
+          
+        }}>
+        <Text style={{ textAlign: 'right', fontSize: 24, color: '#fff', fontWeight: 'bold', padding: 10, justifyContent: 'center', alignItems: 'center' }}>Delete</Text>
+      </TouchableHighlight>
     );
   };
 
   render() {
-    const {tempKey} = this.props.route.params;
-    const dataArray = this.props.state[tempKey];
-    console.log(tempKey, dataArray);
+    const { tempKey } = this.props.route.params;
     return (
-      <Container style={{backgroundColor: '#ffead9'}} noheader>
+      <Container style={{ backgroundColor: '#ffead9' }} noheader>
         <Grid>
           <Row size={2}>
             <ImageBackground
@@ -117,39 +120,43 @@ class CategoriesDetails extends React.Component {
                 width: this.width,
                 height: 'auto',
               }}
-              imageStyle={{borderBottomRightRadius: 30}}
+              imageStyle={{ borderBottomRightRadius: 30 }}
               resizeMode={'stretch'}
               source={require('../assets/images/furniture.jpeg')}></ImageBackground>
           </Row>
-          <Row size={7} style={{justifyContent: 'center'}}>
-            {dataArray.length === 0 ? (
-              <View
-                style={{
-                  backgroundColor: '#fff',
-                  padding: 40,
-                  height: this.height * 0.1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  alignSelf: 'center',
-                }}>
-                <Text
-                  style={{
-                    textAlign: 'center',
-                    fontWeight: 'bold',
-                    fontSize: 20,
-                  }}>
-                  Nothing to show, Please Check on "+" to Add Item
-                </Text>
-              </View>
-            ) : (
-              <Content style={{margin: 5}}>
-                <FlatList
-                  data={dataArray}
-                  renderItem={(item, index) => this.renderItem(item, index)}
-                  keyExtractor={(item, index) => index}
+          <Row size={7} style={{ justifyContent: 'center' }}>
+            {
+               this.state.dataArray !== undefined && this.state.dataArray.length ?
+                <SwipeListView
+                  data={this.state.dataArray}
+                  renderItem={this.renderItem}
+                  showsVerticalScrollIndicator={false}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderHiddenItem={this.renderHiddenItem}
+                  disableRightSwipe={true}
+                  rightOpenValue={-90}
+                  leftOpenValue={0}
                 />
-              </Content>
-            )}
+                :
+                <View
+                  style={{
+                    backgroundColor: '#fff',
+                    padding: 40,
+
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    alignSelf: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      fontWeight: 'bold',
+                      fontSize: 20,
+                    }}>
+                    Nothing to show, Please Check on "+" to Add Item
+              </Text>
+                </View>
+            }
           </Row>
           <Row
             size={2}

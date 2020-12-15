@@ -10,7 +10,8 @@ import {
   Thumbnail,
 } from 'native-base';
 import React from 'react';
-import {View, Dimensions, Image} from 'react-native';
+import {View, Dimensions, Image, ScrollView} from 'react-native';
+import {cleanSingle} from 'react-native-image-crop-picker';
 
 const {width, height} = Dimensions.get('window');
 
@@ -67,14 +68,23 @@ function CardCategory() {
   );
 }
 
-function ShowCardCategory({name, imageProp, data}) {
-  console.log(imageProp);
+function ShowCardCategory({name, imageProp, data, navigation, tempKey, index}) {
   return (
-    <Card>
+    <Card
+      style={{
+        height: height * 0.25,
+        overflow: 'scroll',
+      }}>
+      <View style={{justifyContent: 'flex-end', flexDirection: 'row'}}>
+        <Icon
+          name="arrowright"
+          type="AntDesign"
+          style={{color: '#d99841'}}
+          onPress={() => navigation.navigate('AddDetails', {tempKey, index})}
+        />
+      </View>
       <CardItem Header style={{justifyContent: 'center'}}>
-        {imageProp.uri.length ? (
-          <Thumbnail large source={imageProp} style={{padding: 60}} />
-        ) : null}
+        {imageProp.uri.length ? <Thumbnail large source={imageProp} /> : null}
       </CardItem>
       <CardItem>
         <Body>
