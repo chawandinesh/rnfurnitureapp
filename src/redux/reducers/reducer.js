@@ -9,6 +9,14 @@ const initialState = {
   dinningRoomFurn: [],
   bedRoomFurn: [],
   officeFurn: [],
+  sofasAndArmchairs:[],
+  tablesAndChairs:[],
+  storageSystemUnits:[],
+  sleepingChildrenBedrooms:[],
+  kidsFurn:[],
+  furnComponentsHardware:[],
+  others:[]
+
 };
 
 const reducer = (state = initialState, action) => {

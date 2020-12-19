@@ -40,13 +40,13 @@ class Categories extends React.Component {
 
   render() {
     return (
-      <Container style={{backgroundColor: '#ffead9'}} noheader>
+      <Container style={{backgroundColor: '#dce9f1'}} noheader>
         <Grid>
-          <Row size={2}>
+          <Row size={3}>
             <ImageBackground
               style={{
                 width: this.width,
-                height: 'auto',
+                //  height: ,
               }}
               imageStyle={{borderBottomRightRadius: 30}}
               resizeMode={'stretch'}
@@ -79,14 +79,58 @@ class Categories extends React.Component {
                   tempKey="officeFurn"
                   imageProp={require('../assets/images/OfficeFurn.jpg')}
                 />
+                <ListCategory
+                  categoryPressed={this.categoryPressed}
+                  name="Sofas and Armchairs"
+                  tempKey="sofasAndArmchairs"
+                  imageProp={require('../assets/images/OfficeFurn.jpg')}
+                />
+                <ListCategory
+                  categoryPressed={this.categoryPressed}
+                  name="Tables and Chairs"
+                  tempKey="tablesAndChairs"
+                  imageProp={require('../assets/images/OfficeFurn.jpg')}
+                />
+                <ListCategory
+                  categoryPressed={this.categoryPressed}
+                  name="Storage, Systems and Units"
+                  tempKey="storageSystemUnits"
+                  imageProp={require('../assets/images/OfficeFurn.jpg')}
+                />
+                <ListCategory
+                  categoryPressed={this.categoryPressed}
+                  name="Sleeping area and Children Bedrooms"
+                  tempKey="sleepingChildrenBedrooms"
+                  imageProp={require('../assets/images/OfficeFurn.jpg')}
+                />
+                <ListCategory
+                  categoryPressed={this.categoryPressed}
+                  name="Kids Furniture"
+                  tempKey="kidsFurn"
+                  imageProp={require('../assets/images/OfficeFurn.jpg')}
+                />
+                <ListCategory
+                  categoryPressed={this.categoryPressed}
+                  name="Furniture components and hardware"
+                  tempKey="furnComponentsHardware"
+                  imageProp={require('../assets/images/OfficeFurn.jpg')}
+                />
+                <ListCategory
+                  categoryPressed={this.categoryPressed}
+                  name="Others"
+                  tempKey="others"
+                  imageProp={require('../assets/images/OfficeFurn.jpg')}
+                />
               </List>
             </Content>
           </Row>
           <Row
             size={2}
             style={{
-              backgroundColor: '#fab65c',
+              backgroundColor: '#053654',
               borderTopLeftRadius: 50,
+              // borderColor:'blue',
+              // borderWidth:5,
             }}>
             <Content
               contentContainerStyle={{
@@ -96,13 +140,18 @@ class Categories extends React.Component {
                 width: this.width * 0.9,
                 alignSelf: 'center',
                 marginTop: this.height * 0.03,
+                borderBottomWidth: 5,
+                borderBottomColor: 'blue',
               }}>
               <Button block transparent>
                 <Text
                   style={{
                     fontWeight: 'bold',
                     color: '#fff',
+
                     fontSize: 20,
+                    borderBottomWidth: 5,
+                    borderBottomColor: 'blue',
                   }}>
                   Choose Category
                 </Text>
@@ -118,8 +167,8 @@ class Categories extends React.Component {
 const styles = {
   container: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'yellow',
-    height: 200,
+    backgroundColor: '053a5b',
+    height: 100,
   },
 };
 

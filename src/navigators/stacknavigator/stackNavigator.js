@@ -5,6 +5,7 @@ import Categories from '../../screens/CategoriesScreen';
 import AddDetails from '../../screens/AddDetails';
 import CategoriesDetails from '../../screens/CategoriesDetailsScreen';
 import HomeScreen from '../../screens/HomeScreen';
+import ShowAll from '../../screens/ShowAll'
 import ShowDetails from '../../screens/ShowDetails';
 import {Provider} from 'react-redux';
 import {store} from '../../redux/store/store';
@@ -25,6 +26,7 @@ export default function stackNavigator() {
             name="CategoriesDetails"
             component={CategoriesDetails}
           />
+          <Stack.Screen name="ShowAll" component={ShowAll}/>
           <Stack.Screen name="ShowDetails" component={ShowDetails} />
           <Stack.Screen
             name="Categories"

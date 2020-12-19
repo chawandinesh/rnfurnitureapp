@@ -21,10 +21,12 @@ function ListCategory({imageProp, name, categoryPressed, tempKey}) {
       thumbnail
       onPress={() => categoryPressed(imageProp, name, tempKey)}
       style={{
-        backgroundColor: '#fff',
+        backgroundColor: '#244a6b',
         margin: 10,
         borderTopRightRadius: 10,
         borderBottomLeftRadius: 10,
+        borderBottomWidth: 5,
+        borderBottomColor: '#fff',
       }}>
       <Left></Left>
       <Body>
@@ -32,7 +34,8 @@ function ListCategory({imageProp, name, categoryPressed, tempKey}) {
           style={{
             fontSize: 20,
             fontWeight: 'bold',
-            color: '#eeb65e',
+            color: '#fff',
+            //fontFamily:'cochin'
           }}>
           {name}
         </Text>
@@ -65,6 +68,97 @@ function CardCategory() {
         />
       </Right>
     </CardItem>
+  );
+}
+
+function ShowAllCategories({data}) {
+  console.log('datafrom ', data);
+
+  return (
+    // <Text>{data.title}</Text>
+    <Card
+      style={{
+        height: height * 0.25,
+        width: width,
+
+        overflow: 'scroll',
+      }}>
+      <CardItem Header style={{justifyContent: 'center'}}>
+        <Image
+          source={{
+            uri:
+              'file:///storage/emulated/0/Android/data/com.furnzure/files/Pictures/fe13156d-c15d-41cc-aaee-9251508d36b0.jpg',
+          }}
+        />
+      </CardItem>
+      <CardItem>
+        <Body>
+          <Image
+            source={{
+              uri:
+                'file:///storage/emulated/0/Android/data/com.furnzure/files/Pictures/fe13156d-c15d-41cc-aaee-9251508d36b0.jpg',
+            }}
+          />
+
+          <View
+            style={{
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+              width: width * 0.9,
+            }}>
+            <Icon
+              type="Octicons"
+              name="primitive-dot"
+              style={{color: '#d99841'}}
+            />
+            <View>
+              <Text style={{fontSize: 20, fontWeight: 'bold'}}>
+                {data.title}
+              </Text>
+            </View>
+          </View>
+          <View
+            style={{
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+              width: width * 0.9,
+            }}>
+            <Icon
+              type="Octicons"
+              name="primitive-dot"
+              style={{color: '#d99841'}}
+            />
+            <Text>{data.count}</Text>
+          </View>
+          <View
+            style={{
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+              width: width * 0.9,
+            }}>
+            <Icon
+              type="Octicons"
+              name="primitive-dot"
+              style={{color: '#d99841'}}
+            />
+            <Text>{data.price}</Text>
+          </View>
+          <View
+            style={{
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+              width: width * 0.9,
+            }}>
+            <Icon
+              type="Octicons"
+              name="primitive-dot"
+              style={{color: '#d99841'}}
+            />
+            <Text>{data.note}</Text>
+          </View>
+        </Body>
+      </CardItem>
+    </Card>
   );
 }
 
@@ -148,4 +242,4 @@ function ShowCardCategory({name, imageProp, data, navigation, tempKey, index}) {
   );
 }
 
-export {ListCategory, CardCategory, ShowCardCategory};
+export {ListCategory, CardCategory, ShowAllCategories, ShowCardCategory};
